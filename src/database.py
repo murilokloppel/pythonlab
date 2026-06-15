@@ -20,3 +20,7 @@ def salvar_produto(titulo, preco):
     cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)", (titulo, preco))
     conn.commit()
     conn.close()
+
+if __name__ == "__main__":
+    inicializar_banco()
+    print("Banco de dados 'monitor_precos.db' criado/verificado com sucesso!")

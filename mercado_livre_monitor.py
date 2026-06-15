@@ -1,25 +1,29 @@
-
-from src.config import HEADERS
-from src.database import inicializar_banco, salvar_produto
 import requests
+from src.config import HEADERS
+from src.database import salvar_produto
 
-def buscar_e_salvar_produto(item_id):
-    url = f"https://api.mercadolibre.com/items/{item_id}"
 
-    resposta = requests.get(url, headers=HEADERS)
+session = requests.Session()
+session.headers.update(HEADERS)
+
+
+def buscar_produtos_por_termo(termo, quantidade=5):
+    url = f"https://api.mercadolibre.com/sites/MLB/search"
+    params = {"q": termo, "limit": quantidade}
+
+
+    resposta = session.get(url, params=params)
 
     if resposta.status_code == 200:
+
         dados = resposta.json()
 
-        titulo = dados.get('title')
-        preco = dados.get('price')
-
-        print(f"Sucesso! Produto: {titulo} | Preço: R$ {preco}")
-
-        salvar_produto(titulo, preco)
     else:
-        print(f"Erro {resposta.status_code}: {resposta.text}")
+        print(f"Erro na busca: {resposta.status_code}")
+
 
 if __name__ == "__main__":
-    inicializar_banco()
-    buscar_e_salvar_produto("MLB4032077443")
+    termo = input("Digite o nome do produto que deseja monitorar: ")
+    buscar_produtos_por_termo(termo, quantidade=5)
+
+    session.close()
