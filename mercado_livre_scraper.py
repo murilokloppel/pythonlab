@@ -1,14 +1,18 @@
 import requests
 
+token = " "
 item_id = "MLB4032077443"
 
 url = f"https://api.mercadolibre.com/items/{item_id}"
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "Authorization": f"Bearer {token}",
+    "User-Agent": "data_monitor (Estudo de Integracao e Dados)"
 }
 
-resposta = requests.get(url)
+resposta = requests.get(url, headers=headers)
+
+print(f"Status Code: {resposta.status_code}")
 
 if resposta.status_code == 200:
     dados = resposta.json()
@@ -16,4 +20,4 @@ if resposta.status_code == 200:
     print(f"Preço: {dados['price']}")
     print(f"Quantidade disponível: {dados['available_quantity']}")
 else:
-    print("Ops, verifique o ID do produto ou a conexão.")
+    print(f"Erro ao acessar: {resposta.text}")
