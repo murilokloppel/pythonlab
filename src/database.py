@@ -1,42 +1,60 @@
 import sqlite3
+import pandas as pd
 
 def inicializar_banco():
-    conn = sqlite3.connect('monitor_precos.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS produtos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT,
-            preco REAL,
-            data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    with sqlite3.connect('monitor_precos.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS produtos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                titulo TEXT NOT NULL UNIQUE, 
+                preco REAL NOT NULL,
+                data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
 
 def salvar_produto(titulo, preco):
-    conn = sqlite3.connect('monitor_precos.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)", (titulo, preco))
-    conn.commit()
-    conn.close()
-
-if __name__ == "__main__":
-    inicializar_banco()
-    print("Banco de dados 'monitor_precos.db' criado/verificado com sucesso!")
-
+    try:
+        with sqlite3.connect('monitor_precos.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)", (titulo, preco))
+            conn.commit()
+    except sqlite3.IntegrityError:
+        print(f"Aviso: O produto '{titulo}' já existe no banco. Ignorando...")
 
 def ler_produtos():
-    conn = sqlite3.connect('monitor_precos.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produtos")
-    resultados = cursor.fetchall()
+    with sqlite3.connect('monitor_precos.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM produtos")
+        resultados = cursor.fetchall()
 
     if not resultados:
         print("O banco de dados está vazio.")
     else:
         for linha in resultados:
-            # linha[0] é o id, linha[1] é o título, linha[2] é o preço, linha[3] é a data
-            print(f"ID: {linha[0]} | Produto: {linha[1]} | Preço: R${linha[2]:.2f} | Coleta: {linha[3]}")
+            print(f"ID: {linha[0]} | Produto: {linha[1]} | Preço: R${linha[2]:.2f} | Coleta (UTC): {linha[3]}")
 
-    conn.close()
+def limpar_banco():
+    with sqlite3.connect('monitor_precos.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM produtos")
+        conn.commit()
+    print("Banco limpo! Prontinho para novos dados.")
+
+
+def exportar_para_excel():
+    try:
+        conn = sqlite3.connect('monitor_precos.db')
+
+        query = "SELECT * FROM produtos"
+        df = pd.read_sql_query(query, conn)
+
+        conn.close()
+
+
+        df.to_excel('monitor_precos.xlsx', index=False)
+        print("Sucesso! O arquivo 'monitor_precos.xlsx' foi gerado.")
+
+    except Exception as e:
+        print(f"Erro ao gerar Excel: {e}")
