@@ -1,13 +1,16 @@
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)
 
-    page = browser.new_page()
+    context = p.chromium.launch_persistent_context(
+        user_data_dir=".playwright_profile",
+        headless=False
+    )
+
+    page = context.new_page()
+
     page.goto("https://www.mercadolivre.com.br")
 
-    print(page.title())
+    input("Pressione ENTER para fechar...")
 
-    input("Pressione Enter para fechar...")
-
-    browser.close()
+    context.close()

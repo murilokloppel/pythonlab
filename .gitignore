@@ -5,3 +5,4 @@ __pycache__/
 *.db
 .idea/
 .idea_old
+.playwright_profile
