@@ -2,7 +2,8 @@ PythonLab em Desenvolvimento.
 
 Data Monitor - Mercado Livre
 
-Este é um projeto de estudo para coleta e análise de dados do e-commerce. 
+Este é um projeto de estudo para coleta e análise de dados do e-commerce através de 
+API's oficiais e também de bibliotecas Playwright. 
 O objetivo é monitorar a variação de preços de produtos selecionados ao longo do tempo.
 
  Tecnologias utilizadas
