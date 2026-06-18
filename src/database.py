@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 def inicializar_banco():
-    with sqlite3.connect('monitor_precos.db') as conn:
+    with sqlite3.connect('DB_PATH') as conn:
         cursor = conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS produtos (
@@ -16,7 +16,7 @@ def inicializar_banco():
 
 def salvar_produto(titulo, preco):
     try:
-        with sqlite3.connect('monitor_precos.db') as conn:
+        with sqlite3.connect('DB_PATH') as conn:
             cursor = conn.cursor()
             cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)", (titulo, preco))
             conn.commit()
@@ -24,7 +24,7 @@ def salvar_produto(titulo, preco):
         print(f"Aviso: O produto '{titulo}' já existe no banco. Ignorando...")
 
 def ler_produtos():
-    with sqlite3.connect('monitor_precos.db') as conn:
+    with sqlite3.connect('DB_PATH') as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM produtos")
         resultados = cursor.fetchall()
@@ -36,7 +36,7 @@ def ler_produtos():
             print(f"ID: {linha[0]} | Produto: {linha[1]} | Preço: R${linha[2]:.2f} | Coleta (UTC): {linha[3]}")
 
 def limpar_banco():
-    with sqlite3.connect('monitor_precos.db') as conn:
+    with sqlite3.connect('DB_PATH') as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM produtos")
         conn.commit()
@@ -45,7 +45,7 @@ def limpar_banco():
 
 def exportar_para_excel():
     try:
-        conn = sqlite3.connect('monitor_precos.db')
+        conn = sqlite3.connect('DB_PATH')
 
         query = "SELECT * FROM produtos"
         df = pd.read_sql_query(query, conn)
@@ -53,8 +53,8 @@ def exportar_para_excel():
         conn.close()
 
 
-        df.to_excel('monitor_precos.xlsx', index=False)
-        print("Sucesso! O arquivo 'monitor_precos.xlsx' foi gerado.")
+        df.to_excel('EXCEL_PATH', index=False)
+        print("Sucesso! O arquivo 'EXCEL_PATH' foi gerado.")
 
     except Exception as e:
         print(f"Erro ao gerar Excel: {e}")

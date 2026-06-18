@@ -13,3 +13,7 @@ HEADERS = {
     "Origin": "https://www.mercadolivre.com.br/",
     "Connection": "keep-alive"
 }
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DB_PATH = os.path.join(ROOT_DIR, "bd_precos.db")
+EXCEL_PATH = os.path.join(ROOT_DIR, "excel_precos.xlsx")
