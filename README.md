@@ -13,7 +13,7 @@ O objetivo é monitorar a variação de preços de produtos selecionados ao long
 
 #img05_playwright_profile.png
 
-IEstrutura do projeto após a implementação de um perfil persistente do Playwright.
+Estrutura do projeto após a implementação de um perfil persistente do Playwright.
 O diretório `.playwright_profile/` e suas subpastas são gerados automaticamente e
 armazenam informações de sessão e preferências do navegador, tornando a automação 
 mais estável.

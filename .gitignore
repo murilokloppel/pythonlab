@@ -6,3 +6,6 @@ __pycache__/
 .idea/
 .idea_old
 .playwright_profile
+*.html
+*.log
+*xlsx
