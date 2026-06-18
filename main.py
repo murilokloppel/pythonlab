@@ -15,7 +15,6 @@ def iniciar_monitoramento():
     try:
         print(f"Iniciando monitoramento de {len(lista_de_produtos)} produtos...")
 
-        # 3. Executa a busca
         dados_coletados = monitor.executar(lista_de_produtos)
 
         print("\n--- Resultados Coletados ---")
