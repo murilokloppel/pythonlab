@@ -1,4 +1,4 @@
-from src.database import inicializar_banco, salvar_produto
+from core.database import inicializar_banco, salvar_produto
 
 import requests
 from bs4 import BeautifulSoup

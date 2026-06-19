@@ -1,4 +1,4 @@
-from src.database import salvar_produto, ler_produtos, inicializar_banco, limpar_banco, exportar_para_excel
+from core.database import salvar_produto, ler_produtos, inicializar_banco, limpar_banco, exportar_para_excel
 
 inicializar_banco()
 

@@ -1,5 +1,5 @@
 import requests
-from src.config import HEADERS
+from core.config import HEADERS
 
 session = requests.Session()
 session.headers.update(HEADERS)
