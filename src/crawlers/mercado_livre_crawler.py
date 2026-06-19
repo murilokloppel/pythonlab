@@ -4,9 +4,10 @@ from bs4 import BeautifulSoup
 from src.crawlers.crawler_base import CrawlerBase
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
+
 class MercadoLivreCrawler(CrawlerBase):
-    def __init__(self, headless=False, user_agent=None):
-        super().__init__(headless=headless, user_agent=user_agent)
+    def __init__(self, headless=False, user_agent=None, page=None):
+        super().__init__(headless=headless, user_agent=user_agent, page=page)
 
     def _espera_humana(self, min_seg=10, max_seg=20):
         time.sleep(random.uniform(min_seg, max_seg))
@@ -18,15 +19,18 @@ class MercadoLivreCrawler(CrawlerBase):
                 busca = produto.strip()
                 if not busca:
                     continue
+
                 print(f"Buscando por: {busca}...")
                 busca_url = f"https://lista.mercadolivre.com.br/{busca.replace(' ', '-')}"
-                self.page.goto(busca_url, wait_until="networkidle")
+
+                self.page.goto(busca_url, wait_until="load")
+                self.ha.aceitar_cookies()
+
                 try:
                     self.page.wait_for_selector('.ui-search-result', timeout=10000)
                 except PlaywrightTimeoutError:
-                    self.page.screenshot(path="debug_erro.png")
-                    print(f"Atenção: não foram encontrados resultados visíveis para '{busca}'.")
-                    print("Debug: printscreen salvo como 'debug_erro.png'.")
+                    self.salvar_print_erro(f"erro_busca_{busca.replace(' ', '_')}")
+                    print(f"Atenção: resultados não encontrados para '{busca}'.")
                     self._espera_humana(5, 8)
                     continue
 
@@ -51,6 +55,7 @@ class MercadoLivreCrawler(CrawlerBase):
                     print(f"Nenhum item encontrado para '{busca}'.")
 
             except Exception as e:
+                self.salvar_print_erro(f"erro_critico_{busca.replace(' ', '_')}")
                 print(f"Erro ao processar '{produto}': {e}")
 
             self._espera_humana(12, 18)

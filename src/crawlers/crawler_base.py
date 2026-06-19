@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
-import os, datetime
-from core.human_act import HumanAct
-
+import os
+from datetime import datetime
+from src.core.human_act import HumanAct
 
 STEALTH_JS = """
 Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -19,26 +19,18 @@ if (_originalQuery) {
 }
 """
 
-class CrawlerBase:
-    def __init__(self, page):
-        self.page = page
-        self.ha = HumanAct(page)
 
-    def __init__(self, headless=False, user_agent=None):
+class CrawlerBase:
+    def __init__(self, headless=False, user_agent=None, page=None):
         self.headless = headless
         self.user_agent = user_agent or "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        self.playwright = sync_playwright().start()
-        self.browser = self.playwright.chromium.launch(headless=self.headless)
-        self.context = self.browser.new_context(
-            user_agent=self.user_agent,
-            locale="pt-BR",
-            timezone_id="America/Sao_Paulo"
-        )
-        self.context.add_init_script(STEALTH_JS)
-        self.page = self.context.new_page()
+        self.playwright = None
+        self.browser = None
+        self.context = None
 
-    def iniciar(self):
-        if self.playwright is None:
+        if page:
+            self.page = page
+        else:
             self.playwright = sync_playwright().start()
             self.browser = self.playwright.chromium.launch(headless=self.headless)
             self.context = self.browser.new_context(
@@ -48,6 +40,8 @@ class CrawlerBase:
             )
             self.context.add_init_script(STEALTH_JS)
             self.page = self.context.new_page()
+
+        self.ha = HumanAct(self.page)
 
     def executar(self, lista_produtos):
         raise NotImplementedError("As subclasses devem implementar o método 'executar'")
@@ -62,21 +56,18 @@ class CrawlerBase:
         print(f"Print salvo em: {caminho}")
 
     def fechar(self):
-        if getattr(self, "context", None):
+        if self.context:
             try:
                 self.context.close()
-            except Exception:
+            except:
                 pass
-            self.context = None
-        if getattr(self, "browser", None):
+        if self.browser:
             try:
                 self.browser.close()
-            except Exception:
+            except:
                 pass
-            self.browser = None
-        if getattr(self, "playwright", None):
+        if self.playwright:
             try:
                 self.playwright.stop()
-            except Exception:
+            except:
                 pass
-            self.playwright = None

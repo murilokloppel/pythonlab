@@ -30,6 +30,15 @@ class HumanAct:
 
             elemento.click()
 
+    def aceitar_cookies(self, selector="button:has-text('Aceitar')"):
+        try:
+            cookie_banner = self.page.locator(selector).first
+            if cookie_banner.is_visible(timeout=3000):
+                cookie_banner.click()
+                print("Banner de cookies aceito.")
+        except Exception:
+            print("Nenhum banner de cookies encontrado, prosseguindo...")
+
     def salvar_erro(self, nome="erro"):
         pasta = "assets"
         if not os.path.exists(pasta):

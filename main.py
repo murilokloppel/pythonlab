@@ -1,6 +1,7 @@
 import json
 from src.core.database import ConexaoBanco
 from src.crawlers.mercado_livre_crawler import MercadoLivreCrawler
+from src.crawlers.warmup import WarmupCrawler
 
 
 def iniciar_monitoramento():
@@ -10,15 +11,17 @@ def iniciar_monitoramento():
     except FileNotFoundError:
         print("Erro: O arquivo 'produtos.json' não foi encontrado na raiz.")
         return
-    except json.JSONDecodeError as e:
-        print(f"Erro ao ler 'produtos.json': {e}")
-        return
 
     db = ConexaoBanco()
     monitor = None
 
     try:
-        monitor = MercadoLivreCrawler()
+        monitor = MercadoLivreCrawler(headless=False)
+
+        print("--- Executando aquecimento de perfil ---")
+        aquecedor = WarmupCrawler(page=monitor.page)
+        aquecedor.executar()
+
         print(f"Iniciando monitoramento de {len(lista_de_produtos)} produtos...")
         dados_coletados = monitor.executar(lista_de_produtos)
 
@@ -26,16 +29,13 @@ def iniciar_monitoramento():
         for item in dados_coletados:
             db.salvar(item)
 
-        print(json.dumps(dados_coletados, indent=4, ensure_ascii=False))
-
     except Exception as e:
         print(f"Ocorreu um erro durante a execução: {e}")
+        if monitor:
+            monitor.salvar_print_erro("falha_pipeline")
     finally:
         if monitor:
-            try:
-                monitor.fechar()
-            except Exception:
-                pass
+            monitor.fechar()
         print("\nNavegador fechado. Processo concluído.")
 
 
