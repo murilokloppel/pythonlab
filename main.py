@@ -1,5 +1,5 @@
 import json
-from src.monitores.mercado_livre_monitor import MercadoLivreMonitor
+from src.crawlers.mercado_livre_crawler import MercadoLivreMonitor
 
 def iniciar_monitoramento():
     try:

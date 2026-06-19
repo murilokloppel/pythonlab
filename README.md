@@ -1,31 +1,24 @@
-PythonLab em Desenvolvimento.
+PythonLab Sistema de Coleta de Dados
 
-Data Monitor - Mercado Livre
-
-Este é um projeto de estudo para coleta e análise de dados do e-commerce através de 
-API's oficiais e também de bibliotecas Playwright. 
-O objetivo é monitorar a variação de preços de produtos selecionados ao longo do tempo.
+Este ecossistema de dados está sendo projetado para monitoramento inteligente de e-commerce 
+com pequeno foco em Mercado Livre e com prévia expansão para outras plataformas como Shopee e Tiktok. 
+O sistema utiliza uma abordagem híbrida, combinando integrações oficiais (APIs) com automação
+resiliente (crawlers) para garantir a captura contínua de variações de preços, superando 
+limitações de acesso convencionais.
 
  Tecnologias utilizadas
 - **Python**: Linguagem principal de desenvolvimento.
 - **Requests**: Para fazer as requisições à API pública do Mercado Livre.
 - **SQLite**: Banco de dados para salvar e persistir os preços coletados.
-- **Pandas**: Para tratamento e análise dos dados.
 
-#img05_playwright_profile.png
+Arquitetura do Sistema
 
-Estrutura do projeto após a implementação de um perfil persistente do Playwright.
-O diretório `.playwright_profile/` e suas subpastas são gerados automaticamente e
-armazenam informações de sessão e preferências do navegador, tornando a automação 
-mais estável.
-Por questões de segurança, o diretório `.playwright_profile/` 
-foi adicionado ao `.gitignore`, evitando a exposição de dados locais e
-informações de sessão no repositório.
+A estrutura do projeto, conciste  em garantir desacoplamento, escalabilidade e manutenibilidade:
 
-#img07_ml_block_screenshot.png
+core/: Camada de infraestrutura e persistência (Single Source of Truth).
 
-Mostra a tela de bloqueio do Mercado Livre, que pode ocorrer durante a automação.
+crawlers/: Módulos de ingestão via automação de navegação (resiliência).
 
-
+api_pack/: Camada de integração para consumo de dados estruturados.
 
 

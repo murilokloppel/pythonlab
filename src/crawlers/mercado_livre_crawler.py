@@ -1,7 +1,7 @@
 import time
 import random
 from bs4 import BeautifulSoup
-from src.monitores.monitor_base import MonitorBase
+from src.crawlers.crawler_base import MonitorBase
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 class MercadoLivreMonitor(MonitorBase):
