@@ -22,4 +22,10 @@ Por questões de segurança, o diretório `.playwright_profile/`
 foi adicionado ao `.gitignore`, evitando a exposição de dados locais e
 informações de sessão no repositório.
 
+#img07_ml_block_screenshot.png
+
+Mostra a tela de bloqueio do Mercado Livre, que pode ocorrer durante a automação.
+
+
+
 
