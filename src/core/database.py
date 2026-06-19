@@ -1,60 +1,54 @@
 import sqlite3
 import pandas as pd
 
-def inicializar_banco():
-    with sqlite3.connect('DB_PATH') as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS produtos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                titulo TEXT NOT NULL UNIQUE, 
-                preco REAL NOT NULL,
-                data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        conn.commit()
+class ConexaoBanco:
+    def __init__(self, db_path='bd_precos.db', excel_path='excel_precos.xlsx'):
+        self.db_path = db_path
+        self.excel_path = excel_path
+        self.inicializar_banco()
 
-def salvar_produto(titulo, preco):
-    try:
-        with sqlite3.connect('DB_PATH') as conn:
+    def inicializar_banco(self):
+        with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)", (titulo, preco))
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS produtos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    titulo TEXT NOT NULL UNIQUE, 
+                    preco REAL NOT NULL,
+                    data_coleta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
             conn.commit()
-    except sqlite3.IntegrityError:
-        print(f"Aviso: O produto '{titulo}' já existe no banco. Ignorando...")
 
-def ler_produtos():
-    with sqlite3.connect('DB_PATH') as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM produtos")
-        resultados = cursor.fetchall()
+    def salvar(self, item):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO produtos (titulo, preco) VALUES (?, ?)",
+                               (item['titulo'], item['preco']))
+                conn.commit()
+        except sqlite3.IntegrityError:
+            print(f"Aviso: O produto '{item['titulo']}' já existe. Ignorando...")
 
-    if not resultados:
-        print("O banco de dados está vazio.")
-    else:
-        for linha in resultados:
-            print(f"ID: {linha[0]} | Produto: {linha[1]} | Preço: R${linha[2]:.2f} | Coleta (UTC): {linha[3]}")
+    def ler_todos(self):
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM produtos")
+            return cursor.fetchall()
 
-def limpar_banco():
-    with sqlite3.connect('DB_PATH') as conn:
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM produtos")
-        conn.commit()
-    print("Banco limpo! Prontinho para novos dados.")
+    def limpar_banco(self):
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM produtos")
+            conn.commit()
+        print("Banco limpo!")
 
+    def exportar_para_excel(self):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                df = pd.read_sql_query("SELECT * FROM produtos", conn)
 
-def exportar_para_excel():
-    try:
-        conn = sqlite3.connect('DB_PATH')
-
-        query = "SELECT * FROM produtos"
-        df = pd.read_sql_query(query, conn)
-
-        conn.close()
-
-
-        df.to_excel('EXCEL_PATH', index=False)
-        print("Sucesso! O arquivo 'EXCEL_PATH' foi gerado.")
-
-    except Exception as e:
-        print(f"Erro ao gerar Excel: {e}")
+            df.to_excel(self.excel_path, index=False)
+            print(f"Sucesso! O arquivo '{self.excel_path}' foi gerado.")
+        except Exception as e:
+            print(f"Erro ao gerar Excel: {e}")

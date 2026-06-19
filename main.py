@@ -1,5 +1,7 @@
 import json
-from src.crawlers.mercado_livre_crawler import MercadoLivreMonitor
+from src.core.database import ConexaoBanco
+from src.crawlers.mercado_livre_crawler import MercadoLivreCrawler
+
 
 def iniciar_monitoramento():
     try:
@@ -12,13 +14,20 @@ def iniciar_monitoramento():
         print(f"Erro ao ler 'produtos.json': {e}")
         return
 
+    db = ConexaoBanco()
     monitor = None
+
     try:
-        monitor = MercadoLivreMonitor()
+        monitor = MercadoLivreCrawler()
         print(f"Iniciando monitoramento de {len(lista_de_produtos)} produtos...")
         dados_coletados = monitor.executar(lista_de_produtos)
-        print("\n--- Resultados Coletados ---")
+
+        print("\n--- Salvando no Banco de Dados ---")
+        for item in dados_coletados:
+            db.salvar(item)
+
         print(json.dumps(dados_coletados, indent=4, ensure_ascii=False))
+
     except Exception as e:
         print(f"Ocorreu um erro durante a execução: {e}")
     finally:
@@ -28,6 +37,7 @@ def iniciar_monitoramento():
             except Exception:
                 pass
         print("\nNavegador fechado. Processo concluído.")
+
 
 if __name__ == "__main__":
     iniciar_monitoramento()

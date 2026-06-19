@@ -1,4 +1,7 @@
 from playwright.sync_api import sync_playwright
+import os, datetime
+from core.human_act import HumanAct
+
 
 STEALTH_JS = """
 Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -16,7 +19,11 @@ if (_originalQuery) {
 }
 """
 
-class MonitorBase:
+class CrawlerBase:
+    def __init__(self, page):
+        self.page = page
+        self.ha = HumanAct(page)
+
     def __init__(self, headless=False, user_agent=None):
         self.headless = headless
         self.user_agent = user_agent or "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -44,6 +51,15 @@ class MonitorBase:
 
     def executar(self, lista_produtos):
         raise NotImplementedError("As subclasses devem implementar o método 'executar'")
+
+    def salvar_print_erro(self, nome="erro"):
+        pasta = "assets"
+        if not os.path.exists(pasta):
+            os.makedirs(pasta)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        caminho = os.path.join(pasta, f"{nome}_{timestamp}.png")
+        self.page.screenshot(path=caminho)
+        print(f"Print salvo em: {caminho}")
 
     def fechar(self):
         if getattr(self, "context", None):

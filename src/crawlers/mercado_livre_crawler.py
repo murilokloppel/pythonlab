@@ -1,10 +1,10 @@
 import time
 import random
 from bs4 import BeautifulSoup
-from src.crawlers.crawler_base import MonitorBase
+from src.crawlers.crawler_base import CrawlerBase
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
-class MercadoLivreMonitor(MonitorBase):
+class MercadoLivreCrawler(CrawlerBase):
     def __init__(self, headless=False, user_agent=None):
         super().__init__(headless=headless, user_agent=user_agent)
 
