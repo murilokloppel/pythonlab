@@ -1,20 +1,28 @@
 import random
 import time
 from src.crawlers.crawler_base import CrawlerBase
+from src.core.human_act import HumanAct
 
 
 class WarmupCrawler(CrawlerBase):
     def __init__(self, page=None, headless=False):
-        super().__init__(headless=headless, page=page)
+        if page:
+            self.page = page
+            self.ha = HumanAct(self.page)
+            self.context = self.page.context
+            self.playwright = None
+        else:
+            super().__init__(headless=headless)
 
     def executar(self, sites=None):
         if not sites:
             sites = [
-                "https://g1.globo.com",
-                "https://www.uol.com.br",
-                "https://www.estadao.com.br",
-                "https://pt.wikipedia.org/wiki/Especial:Página_aleatória",
-                "https://www.cnnbrasil.com.br"
+                "https://www.youtube.com/results?search_query=unboxing+eletronicos",
+                "https://www.mercadolivre.com.br/ofertas",
+                "https://www.techtudo.com.br",
+                "https://www.buscape.com.br",
+                "https://www.zoom.com.br",
+                "https://www.linkedin.com"
             ]
 
         random.shuffle(sites)

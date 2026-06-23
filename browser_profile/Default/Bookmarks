@@ -1,0 +1,68 @@
+{
+   "checksum": "1f5d4cdd1ba8447973d9d9e1da9d012b",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13426689277895532",
+            "date_last_used": "0",
+            "guid": "39d339e1-cf8e-48e5-affe-b696001df43d",
+            "id": "5",
+            "name": "UOL - Seu universo online",
+            "type": "url",
+            "url": "https://www.uol.com.br/"
+         }, {
+            "date_added": "13426689297795283",
+            "date_last_used": "0",
+            "guid": "7ae246a1-2277-4361-b248-f800b699554c",
+            "id": "6",
+            "name": "CNN Brasil | Notícias Ao Vivo do Brasil e do Mundo",
+            "type": "url",
+            "url": "https://www.cnnbrasil.com.br/"
+         }, {
+            "date_added": "13426689340350748",
+            "date_last_used": "0",
+            "guid": "7743acdf-5cdd-4901-92bf-c743f38ed46a",
+            "id": "7",
+            "name": "g1 - O portal de notícias da Globo",
+            "type": "url",
+            "url": "https://g1.globo.com/"
+         }, {
+            "date_added": "13426689418702422",
+            "date_last_used": "13426689459822053",
+            "guid": "e08bd62d-037f-448b-91ea-eafbfb7ba96e",
+            "id": "8",
+            "name": "Teclado Mecanico Rgb | Mercado Livre",
+            "type": "url",
+            "url": "https://lista.mercadolivre.com.br/teclado-mecanico-rgb"
+         } ],
+         "date_added": "13426689223978790",
+         "date_last_used": "0",
+         "date_modified": "13426689418702423",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Barra de favoritos",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13426689223978790",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Outros favoritos",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13426689223978790",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Dispositivos móveis",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

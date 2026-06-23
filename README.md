@@ -1,4 +1,4 @@
-PythonLab Sistema de Coleta de Dados
+PythonLab Sistema de Automação WEB de Coleta de Dados
 
 Este ecossistema de dados está sendo projetado para monitoramento inteligente de e-commerce 
 com pequeno foco em Mercado Livre e com prévia expansão para outras plataformas como Shopee e Tiktok. 

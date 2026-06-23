@@ -27,7 +27,7 @@ class MercadoLivreCrawler(CrawlerBase):
                 self.ha.aceitar_cookies()
 
                 try:
-                    self.page.wait_for_selector('.ui-search-result', timeout=10000)
+                    self.page.wait_for_selector('div.ui-search-result__wrapper', timeout=15000)
                 except PlaywrightTimeoutError:
                     self.salvar_print_erro(f"erro_busca_{busca.replace(' ', '_')}")
                     print(f"Atenção: resultados não encontrados para '{busca}'.")
@@ -36,12 +36,14 @@ class MercadoLivreCrawler(CrawlerBase):
 
                 html_conteudo = self.page.content()
                 soup = BeautifulSoup(html_conteudo, 'html.parser')
-                item = soup.select_one('.ui-search-result')
+                itens = soup.select('div.ui-search-result__wrapper')
 
-                if item:
+                if itens:
+                    item = itens[0]
                     nome_el = item.select_one('.ui-search-item__title')
+                    preco_el = item.select_one('.andes-money-amount__fraction')
+
                     nome = nome_el.get_text(strip=True) if nome_el else "N/A"
-                    preco_el = item.select_one('.price-tag-fraction')
                     preco = preco_el.get_text(strip=True) if preco_el else "N/A"
                     codigo = item.get('id') or "N/A"
 

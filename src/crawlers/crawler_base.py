@@ -24,27 +24,23 @@ class CrawlerBase:
     def __init__(self, headless=False, user_agent=None, page=None):
         self.headless = headless
         self.user_agent = user_agent or "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        self.playwright = None
-        self.browser = None
-        self.context = None
+        self.playwright = sync_playwright().start()
 
-        if page:
-            self.page = page
-        else:
-            self.playwright = sync_playwright().start()
-            self.browser = self.playwright.chromium.launch(headless=self.headless)
-            self.context = self.browser.new_context(
-                user_agent=self.user_agent,
-                locale="pt-BR",
-                timezone_id="America/Sao_Paulo"
-            )
-            self.context.add_init_script(STEALTH_JS)
-            self.page = self.context.new_page()
+        self.context = self.playwright.chromium.launch_persistent_context(
+            user_data_dir="browser_profile",
+            headless=self.headless,
+            user_agent=self.user_agent,
+            locale="pt-BR",
+            timezone_id="America/Sao_Paulo",
+            args=["--start-maximized"]
+        )
 
+        self.context.add_init_script(STEALTH_JS)
+        self.page = self.context.pages[0] if self.context.pages else self.context.new_page()
         self.ha = HumanAct(self.page)
 
     def executar(self, lista_produtos):
-        raise NotImplementedError("As subclasses devem implementar o método 'executar'")
+        raise NotImplementedError
 
     def salvar_print_erro(self, nome="erro"):
         pasta = "assets"
@@ -61,12 +57,7 @@ class CrawlerBase:
                 self.context.close()
             except:
                 pass
-        if self.browser:
-            try:
-                self.browser.close()
-            except:
-                pass
-        if self.playwright:
+        if self.playwright is not None:
             try:
                 self.playwright.stop()
             except:

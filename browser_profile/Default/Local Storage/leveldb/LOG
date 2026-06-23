@@ -1,0 +1,9 @@
+2026/06/23-08:53:44.302 3914 Reusing MANIFEST C:\Users\Murilo\Documents\PycharmProject\pythonlab\browser_profile\Default\Local Storage\leveldb/MANIFEST-000001
+2026/06/23-08:53:44.305 3914 Recovering log #3
+2026/06/23-08:53:44.312 3914 Reusing old log C:\Users\Murilo\Documents\PycharmProject\pythonlab\browser_profile\Default\Local Storage\leveldb/000003.log 
+2026/06/23-08:54:04.312 5068 Level-0 table #5: started
+2026/06/23-08:54:04.333 5068 Level-0 table #5: 571257 bytes OK
+2026/06/23-08:54:04.338 5068 Delete type=0 #3
+2026/06/23-08:57:47.793 5068 Level-0 table #7: started
+2026/06/23-08:57:47.800 5068 Level-0 table #7: 30830 bytes OK
+2026/06/23-08:57:47.803 5068 Delete type=0 #4
